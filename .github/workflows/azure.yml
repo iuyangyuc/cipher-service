@@ -1,0 +1,24 @@
+name: Docker image for Azure
+
+on:
+  push
+
+jobs:
+    build_and_publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: npm install
+              run: npm ci
+            - name: run unit tests
+              run: npm test
+            - name: publish to GitHub registry
+              run: |
+                docker login --username iuyangyuc --password ${{ secrets.ACCESS_TOKEN }} ghcr.io
+                docker build -t ghcr.io/iuyangyuc/cipher-service:1 .
+                docker push ghcr.io/iuyangyuc/cipher-service:1
+            - name: publish to Azure
+              run: |
+                docker login --username yangyuc --password ${{ secrets.AZURE_TOKEN }} yangyuc.azurecr.io
+                docker tag ghcr.io/iuyangyuc/cipher-service:1 yangyuc.azurecr.io/cipher-service:1
+                docker push yangyuc.azurecr.io/cipher-service:1
