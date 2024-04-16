@@ -9,7 +9,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - name: npm install
-              run: npm clean-instal
+              run: npm clean-install
             - name: run unit tests
               run: npm test
             - name: publish to GitHub registry
